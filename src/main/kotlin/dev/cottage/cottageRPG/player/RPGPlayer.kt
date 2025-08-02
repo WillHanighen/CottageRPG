@@ -82,12 +82,11 @@ data class RPGPlayer(
             // Default stat increases if no class
             maxHealth += 2.0
             maxMana += 10.0
-            health = maxHealth
-            mana = maxMana
         }
         
-        // Notify player if online
+        // Update Bukkit player's max health if online
         getBukkitPlayer()?.let { player ->
+            player.maxHealth = maxHealth
             player.sendMessage("§6Congratulations! You reached level $level!")
             player.playSound(player.location, org.bukkit.Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f)
         }

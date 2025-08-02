@@ -1,6 +1,7 @@
 package dev.cottage.cottageRPG.listeners
 
 import dev.cottage.cottageRPG.CottageRPG
+import dev.cottage.cottageRPG.skills.Skill
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
@@ -321,11 +322,6 @@ class PlayerEventListener(private val plugin: CottageRPG) : Listener {
             // Send feedback to player about the shot
             val distanceFormatted = String.format("%.1f", distance)
             shooter.playSound(shooter.location, org.bukkit.Sound.ENTITY_ARROW_HIT_PLAYER, 1.0f, 1.0f)
-            if (finalExp == 100.toLong()) {
-                shooter.sendMessage("§6Archery XP: +$finalExp (${distanceFormatted}m shot) §c(MAX)")
-            } else {
-                shooter.sendMessage("§6Archery XP: +$finalExp (${distanceFormatted}m shot)")
-            }
 
             // Delay health check by 1 tick to get health after damage is applied
             Bukkit.getScheduler().runTaskLater(plugin, Runnable {
@@ -372,29 +368,56 @@ class PlayerEventListener(private val plugin: CottageRPG) : Listener {
         val rpgPlayer = plugin.playerManager.getPlayer(player)
         val enchantingLevel = rpgPlayer.getSkillLevel("enchanting")
         
-        // Remove existing enchanting luck modifier
-        val luckAttribute = player.getAttribute(Attribute.LUCK)
-        luckAttribute?.let { attribute ->
-            // Remove any existing enchanting luck modifier
-            val existingModifier = attribute.modifiers.find { it.name == "CottageRPG_Enchanting_Luck" }
-            existingModifier?.let { attribute.removeModifier(it) }
-            
-            // Add new luck modifier based on enchanting level
-            if (enchantingLevel > 0) {
+        // Get luck attribute
+        val luckAttribute = player.getAttribute(Attribute.LUCK) ?: return
+        
+        // Define the modifier UUID and name consistently
+        val modifierUUID = UUID.nameUUIDFromBytes("CottageRPG_Enchanting_Luck".toByteArray())
+        val modifierName = "CottageRPG_Enchanting_Luck"
+        
+        // Remove any existing enchanting luck modifiers (check by both UUID and name)
+        val existingModifiers = luckAttribute.modifiers.filter { 
+            it.uniqueId == modifierUUID || it.name == modifierName 
+        }
+        
+        existingModifiers.forEach { modifier ->
+            try {
+                luckAttribute.removeModifier(modifier)
+            } catch (e: Exception) {
+                // Log but don't fail if removal fails
+                plugin.logger.warning("Failed to remove existing luck modifier: ${e.message}")
+            }
+        }
+        
+        // Add new luck modifier based on enchanting level
+        if (enchantingLevel > 0) {
+            try {
                 // Each enchanting level gives 0.1 luck (max +10 luck at level 100)
                 val luckBonus = enchantingLevel * 0.1
                 val modifier = AttributeModifier(
-                    UUID.nameUUIDFromBytes("CottageRPG_Enchanting_Luck".toByteArray()),
-                    "CottageRPG_Enchanting_Luck",
+                    modifierUUID,
+                    modifierName,
                     luckBonus,
                     AttributeModifier.Operation.ADD_NUMBER
                 )
-                attribute.addModifier(modifier)
                 
-                // Notify player of luck bonus
-                if (plugin.configManager.getBoolean("skills.show_attribute_updates", true)) {
-                    player.sendMessage("§6[Enchanting] §7Your luck has increased! §a+${String.format("%.1f", luckBonus)} Luck")
+                // Double-check that the modifier doesn't already exist before adding
+                val stillExists = luckAttribute.modifiers.any { 
+                    it.uniqueId == modifierUUID || it.name == modifierName 
                 }
+                
+                if (!stillExists) {
+                    luckAttribute.addModifier(modifier)
+                    
+                    // Notify player of luck bonus
+                    if (plugin.configManager.getBoolean("skills.show_attribute_updates", true)) {
+                        player.sendMessage("§6[Enchanting] §7Your luck has increased! §a+${String.format("%.1f", luckBonus)} Luck")
+                    }
+                } else {
+                    plugin.logger.warning("Luck modifier still exists after removal attempt for player ${player.name}")
+                }
+            } catch (e: Exception) {
+                plugin.logger.severe("Failed to add luck modifier for player ${player.name}: ${e.message}")
             }
         }
     }
