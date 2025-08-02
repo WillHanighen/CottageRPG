@@ -1,0 +1,191 @@
+# CottageRPG Configuration File
+# This file contains all configurable options for the RPG plugin
+
+# General Plugin Settings
+general:
+  # Enable debug mode for additional logging
+  debug: false
+  # Plugin prefix for messages
+  prefix: "§7[§6cRPG§7]§r"
+  # Language file to use
+  language: "en"
+
+# Player System Configuration
+player:
+  # Starting level for new players
+  starting_level: 1
+  # Starting health points
+  starting_health: 20.0
+  # Starting mana points
+  starting_mana: 100.0
+  # Maximum level players can reach
+  max_level: 100
+  # Experience multiplier
+  exp_multiplier: 1.0
+  # Save player data interval (in ticks, 20 ticks = 1 second)
+  save_interval: 6000
+
+# Class System Configuration
+classes:
+  # Enable class system
+  enabled: true
+  # Allow class changing
+  allow_class_change: true
+  # Cost to change class (in experience levels)
+  class_change_cost: 10
+  # Available classes
+  available_classes:
+    - "warrior"
+    - "mage"
+    - "archer"
+    - "rogue"
+
+# Skills System Configuration
+skills:
+  # Enable skills system
+  enabled: true
+  # Maximum skill level
+  max_skill_level: 100
+  # Skill experience multiplier
+  skill_exp_multiplier: 1.0
+  # Available skills
+  available_skills:
+    - "mining"
+    - "woodcutting"
+    - "farming"
+    - "combat"
+    - "archery"
+    - "magic"
+
+# Economy Integration
+economy:
+  # Enable economy features
+  enabled: true
+  # Starting money for new players
+  starting_money: 100.0
+  # Currency symbol
+  currency_symbol: "$"
+
+# Combat System
+combat:
+  # Enable custom combat mechanics
+  enabled: true
+  # Damage multiplier
+  damage_multiplier: 1.0
+  # Enable critical hits
+  critical_hits: true
+  # Critical hit chance (0.0 to 1.0)
+  critical_chance: 0.1
+  # Critical hit damage multiplier
+  critical_multiplier: 1.5
+  # PVP toggle
+
+# Quests System
+quests:
+  # Enable quest system
+  enabled: true
+  # Maximum active quests per player
+  max_active_quests: 5
+  # Quest completion rewards multiplier
+  reward_multiplier: 1.0
+
+# GUI Configuration
+gui:
+  # Update interval for GUIs (in ticks)
+  update_interval: 20
+  # GUI titles
+  titles:
+    player_stats: "§6Player Stats"
+    class_selection: "§6Choose Your Class"
+    skills: "§6Skills"
+    quests: "§6Quests"
+
+# Scoreboard Configuration
+scoreboard:
+  # Enable/disable scoreboard system
+  enabled: true
+  # Show scoreboard automatically when players join
+  show_on_join: true
+  # Scoreboard title
+  title: "§6§lCottage RPG"
+  # Update interval (in ticks, 20 = 1 second, 10 = 0.5 seconds, 5 = 0.25 seconds)
+  update_interval: 10
+  # Server name displayed at bottom
+  server_name: "CottageRPG"
+  # Display options
+  display:
+    # Show player level and experience
+    level: true
+    # Show player class
+    class: true
+    # Show health bar
+    health: true
+    # Show mana bar
+    mana: true
+    # Show money
+    money: true
+    # Show top skills
+    top_skills: true
+    # Number of top skills to show
+    top_skills_count: 2
+    # Show active cooldowns
+    cooldowns: true
+    # Maximum cooldowns to display
+    max_cooldowns: 2
+
+# Database Configuration
+database:
+  # Database type: sqlite, mysql, postgresql
+  type: "sqlite"
+  # SQLite file name (only used if type is sqlite)
+  sqlite_file: "cottageRPG.db"
+  # MySQL/PostgreSQL settings (only used if type is mysql or postgresql)
+  host: "localhost"
+  port: 3306
+  database: "cottageRPG"
+  username: "root"
+  password: "password"
+  # Connection pool settings
+  max_connections: 10
+  connection_timeout: 30000
+
+# Particle Effects
+particles:
+  # Enable particle effects
+  enabled: true
+  # Particle density (0.1 to 2.0)
+  density: 1.0
+  # Level up particles
+  level_up_particle: "FIREWORK"
+  # Skill up particles
+  skill_up_particle: "ENCHANT"
+
+# Sound Effects
+sounds:
+  # Enable sound effects
+  enabled: true
+  # Sound volume (0.0 to 1.0)
+  volume: 0.5
+  # Level up sound
+  level_up_sound: "ENTITY_PLAYER_LEVELUP"
+  # Skill up sound
+  skill_up_sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
+
+# World Integration
+worlds:
+  # Worlds where RPG features are enabled
+  enabled_worlds:
+    - "world"
+    - "world_nether"
+    - "world_the_end"
+  # Disable RPG features in these worlds
+  disabled_worlds: []
+
+# Performance Settings
+performance:
+  # Async processing for heavy operations
+  async_processing: true
+  # Cache size for player data
+  cache_size: 1000
+  # Cache expiry time (in minutes)
+  cache_expiry: 30

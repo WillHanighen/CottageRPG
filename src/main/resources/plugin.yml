@@ -1,0 +1,41 @@
+name: CottageRPG
+version: '1.0-SNAPSHOT'
+main: dev.cottage.cottageRPG.CottageRPG
+api-version: '1.21.5'
+prefix: "[cRPG]"
+load: STARTUP
+authors: [ Cottage Dev ]
+description: RPG plugin for Cottage SMPs
+website: cottage-dev.net
+
+commands:
+  rpg:
+    description: Main RPG command
+    usage: /rpg <stats|skills|class|top|reload|scoreboard>
+    aliases: [crpg]
+  stats:
+    description: View your RPG stats
+    usage: /stats
+  skills:
+    description: View your skills
+    usage: /skills
+  class:
+    description: Choose or view your RPG class
+    usage: /class [className]
+  scoreboard:
+    description: Toggle RPG scoreboard
+    usage: /scoreboard
+    aliases: [sb, rpgboard, rpgscoreboard]
+
+permissions:
+  cottageRPG.use:
+    description: Basic RPG plugin usage
+    default: true
+  cottageRPG.admin:
+    description: Admin permissions for RPG plugin
+    default: op
+    children:
+      - cottageRPG.admin.reload
+  cottageRPG.admin.reload:
+    description: Permission to reload the plugin
+    default: op
