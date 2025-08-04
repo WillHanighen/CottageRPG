@@ -36,6 +36,38 @@ permissions:
     default: op
     children:
       - cottageRPG.admin.reload
+      - cottageRPG.admin.setlevel
+      - cottageRPG.admin.setskill
+      - cottageRPG.admin.setexp
+      - cottageRPG.admin.addexp
+      - cottageRPG.admin.setmoney
+      - cottageRPG.admin.setclass
+      - cottageRPG.admin.addskillexp
+      - cottageRPG.admin.resetcooldowns
   cottageRPG.admin.reload:
     description: Permission to reload the plugin
+    default: op
+  cottageRPG.admin.setlevel:
+    description: Permission to set player levels
+    default: op
+  cottageRPG.admin.setskill:
+    description: Permission to set player skill levels
+    default: op
+  cottageRPG.admin.setexp:
+    description: Permission to set player experience
+    default: op
+  cottageRPG.admin.addexp:
+    description: Permission to add player experience
+    default: op
+  cottageRPG.admin.setmoney:
+    description: Permission to set player money
+    default: op
+  cottageRPG.admin.setclass:
+    description: Permission to set player classes
+    default: op
+  cottageRPG.admin.addskillexp:
+    description: Permission to add skill experience to players
+    default: op
+  cottageRPG.admin.resetcooldowns:
+    description: Permission to reset player spell cooldowns
     default: op

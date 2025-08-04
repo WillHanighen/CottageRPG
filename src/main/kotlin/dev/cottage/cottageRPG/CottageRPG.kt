@@ -7,6 +7,9 @@ import dev.cottage.cottageRPG.listeners.PlayerEventListener
 import dev.cottage.cottageRPG.player.PlayerManager
 import dev.cottage.cottageRPG.scoreboard.ScoreboardManager
 import dev.cottage.cottageRPG.ui.BossBarManager
+import dev.cottage.cottageRPG.crafting.WandCraftingManager
+import dev.cottage.cottageRPG.spells.PlayerSpellManager
+import dev.cottage.cottageRPG.spells.SpellCooldownManager
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.plugin.java.JavaPlugin
@@ -18,6 +21,9 @@ class CottageRPG : JavaPlugin() {
     lateinit var playerManager: PlayerManager
     lateinit var scoreboardManager: ScoreboardManager
     lateinit var bossBarManager: BossBarManager
+    lateinit var wandCraftingManager: WandCraftingManager
+    lateinit var playerSpellManager: PlayerSpellManager
+    lateinit var spellCooldownManager: SpellCooldownManager
 
     override fun onEnable() {
         // Initialize managers
@@ -26,6 +32,9 @@ class CottageRPG : JavaPlugin() {
         playerManager = PlayerManager(this)
         scoreboardManager = ScoreboardManager(this)
         bossBarManager = BossBarManager(this)
+        wandCraftingManager = WandCraftingManager(this)
+        playerSpellManager = PlayerSpellManager(this)
+        spellCooldownManager = SpellCooldownManager()
 
         // Register commands
         val rpgCommand = RPGCommand(this)
@@ -40,8 +49,12 @@ class CottageRPG : JavaPlugin() {
         getCommand("scoreboard")?.setExecutor(rpgCommand)
         getCommand("scoreboard")?.tabCompleter = rpgCommand
 
+
         // Register event listeners using PaperMC's server instance
         server.pluginManager.registerEvents(PlayerEventListener(this), this)
+
+        // Register crafting recipes
+        wandCraftingManager.registerWandRecipe()
 
         // Plugin startup logic with Adventure Component
         val enableMessage = Component.text("CottageRPG v")
@@ -57,6 +70,16 @@ class CottageRPG : JavaPlugin() {
     }
 
     override fun onDisable() {
+        // Save spell selections before shutdown
+        if (::playerSpellManager.isInitialized) {
+            playerSpellManager.forceSave()
+        }
+        
+        // Unregister crafting recipes
+        if (::wandCraftingManager.isInitialized) {
+            wandCraftingManager.unregisterRecipes()
+        }
+        
         // Shutdown scoreboard manager
         if (::scoreboardManager.isInitialized) {
             scoreboardManager.shutdown()
