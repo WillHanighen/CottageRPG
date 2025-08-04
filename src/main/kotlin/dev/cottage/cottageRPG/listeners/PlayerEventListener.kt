@@ -156,7 +156,7 @@ class PlayerEventListener(private val plugin: CottageRPG) : Listener {
             if (enabledWorlds.isNotEmpty() && !enabledWorlds.contains(damager.world.name)) return
 
             // Check if attacking with a magic wand - cast spells instead of normal combat
-            if (plugin.wandCraftingManager.isMagicWand(item) || isSpellCastingItem(item.type)) {
+            if (plugin.wandCraftingManager.isMagicWand(item)) {
                 // Cancel the normal attack damage
                 event.isCancelled = true
 
@@ -438,8 +438,8 @@ class PlayerEventListener(private val plugin: CottageRPG) : Listener {
         val item = player.inventory.itemInMainHand
         val action = event.action
 
-        // Check if the item is a spell casting item (wand, staff, etc.) or magic wand
-        val isSpellItem = isSpellCastingItem(item.type) || plugin.wandCraftingManager.isMagicWand(item)
+        // Only allow magic wands for spell casting
+        val isSpellItem = plugin.wandCraftingManager.isMagicWand(item)
 
         if (!isSpellItem) return
 
@@ -510,8 +510,10 @@ class PlayerEventListener(private val plugin: CottageRPG) : Listener {
         val item = player.inventory.itemInMainHand
         if (item.type == Material.AIR) return
 
-        // Check if the item is a spell casting item (wand, staff, etc.)
-        if (!isSpellCastingItem(item.type) && !plugin.wandCraftingManager.isMagicWand(item)) return
+        // Only allow magic wands for spell casting
+        val isSpellItem = plugin.wandCraftingManager.isMagicWand(item)
+
+        if (!isSpellItem) return
 
         val rpgPlayer = plugin.playerManager.getPlayer(player)
 
@@ -558,18 +560,6 @@ class PlayerEventListener(private val plugin: CottageRPG) : Listener {
                 player.sendMessage("§cFailed to cast ${spell.name}!")
                 return
             }
-        }
-    }
-
-    /**
-     * Check if an item can be used for spell casting
-     */
-    private fun isSpellCastingItem(material: Material): Boolean {
-        return when (material) {
-            Material.STICK, Material.BLAZE_ROD, Material.BONE, Material.BAMBOO,
-            Material.BREEZE_ROD, Material.ECHO_SHARD, Material.AMETHYST_SHARD,
-            Material.PRISMARINE_SHARD, Material.NETHER_STAR -> true
-            else -> false
         }
     }
 

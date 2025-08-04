@@ -121,6 +121,10 @@ class WandCraftingManager(private val plugin: CottageRPG) {
         val displayName = meta.displayName ?: return false
         val lore = meta.lore ?: return false
         
-        return displayName.contains("Wand") && lore.any { it.contains("Wand") }
+        // Case-insensitive check for "wand" in both display name and lore
+        val hasWandInName = displayName.lowercase().contains("wand")
+        val hasWandInLore = lore.any { it.lowercase().contains("wand") }
+        
+        return hasWandInName && hasWandInLore
     }
 }
